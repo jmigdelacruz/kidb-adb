@@ -1,0 +1,242 @@
+body {
+  background: #fff;
+  padding: 0;
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+}
+
+main {
+  margin-bottom: 6em;
+}
+
+.kia__nav {
+  background: #0090C4;
+  color: #fff;
+  border-top: 3px solid #022569;
+}
+
+.kia__ul {
+  width: 75%;
+  margin: auto;
+  list-style-type: none;
+  padding: 1.5em 3em;
+}
+
+.kia__ul li {
+  padding: 1em;
+  padding-left: 0;
+}
+
+.kia__header, .kia__body {
+  color: #444;
+  width: 75%;
+  margin: auto;
+  margin-top: 3em;
+}
+
+.kia__header p, .kia__body p {
+  color: #555;
+  font-size: 0.85em;
+}
+
+.kia__h1 {
+  margin-bottom: 0;
+  font-size: 1.5em;
+}
+
+.kia__h2 {
+  color: #444;
+  font-size: 1.2em;
+  font-weight: bold;
+  margin-top: 2em;
+  margin-bottom: 0;
+  letter-spacing: 0.5px;
+}
+
+.kia__h3 {
+  font-size: 1em;
+  font-weight: normal;
+  letter-spacing: 0.5px;
+  line-height: 1.4;
+}
+
+.kia__h4 {
+  font-size: 0.85em;
+  letter-spacing: 0px;
+  line-height: 1.4;
+  margin-bottom: 0;
+  margin-top: 2em;
+}
+
+.kia__h4-sub {
+  margin-top: 0.5em;
+  margin-bottom: 0;
+}
+
+.kia__brand {
+  width: 75%;
+  margin: auto;
+  padding: 1em;
+  padding-bottom: 1em;
+  padding-left: 1em;
+}
+
+.kia__brand--title {
+  font-weight: 700;
+  letter-spacing: 0.75px;
+  font-size: 1.3em;
+}
+
+.kia__brand--subtitle {
+  font-weight: 300;
+  letter-spacing: 0.5px;
+}
+
+.kia__logo {
+  max-width: 200px;
+}
+
+.kia__call--header {
+  color: #555;
+  font-weight: 500;
+  margin-bottom: 0.5em;
+  float: left;
+  margin-top: 1em;
+}
+
+.kia__call--description {
+  color: #555;
+  float: right;
+  font-size: 0.8em;
+  padding-top: 0.25em;
+  padding-right: 0.5em;
+  margin-top: 1.5em;
+}
+
+.kia__call--description.kia__call--description-centered {
+  float: none;
+  text-align: center;
+}
+
+.kia__link {
+  cursor: pointer;
+  color: #4AABDB;
+  text-decoration: none;
+}
+
+.kia__link:hover {
+  color: #042069;
+}
+
+.kia__collapsed {
+  display: none;
+  background: #E2F3FA;
+  padding: 1em;
+  margin-top: -2px;
+  margin-left: -1px;
+  border-bottom-right-radius: 5px;
+  border-bottom-left-radius: 5px;
+  border: 1px solid #4AABDB;
+  margin-bottom: 1em;
+  -webkit-box-shadow: 1px 1px 1px 1px rgba(238, 238, 238, 0.4);
+  box-shadow: 1px 1px 1px 1px rgba(238, 238, 238, 0.4);
+}
+
+.kia__collapsed .kia__collapsed--head {
+  font-size: 0.9em;
+  color: #337CB1;
+  margin-bottom: 0.3em;
+}
+
+.kia__collapsed .kia__collapsed--subhead {
+  font-size: 0.9em;
+  color: #555;
+}
+
+.kia__collapsed .kia__collapsed--code {
+  width: 320px;
+  height: 180px;
+  background: #fff;
+  border: 1px solid #ddd;
+  resize: none;
+  outline: none;
+  margin-top: 5px;
+}
+
+.kia__collapsed .kia__collapsed--code-value {
+  width: 320px;
+  height: 180px;
+  background: #fff;
+  border: 1px solid #ddd;
+  resize: none;
+  outline: none;
+  margin-top: 5px;
+}
+
+.kia__copy:hover {
+  background: #ddd;
+}
+
+.kia__copy:active {
+  background: #91D6F3;
+}
+
+.kia__accent {
+  color: #042069;
+}
+
+.kia__accent.kia__accent--bg {
+  color: #4AABDB;
+  padding-left: 3px;
+  padding-right: 3px;
+  background: #fff;
+  border-radius: 5px;
+  font-size: 1.2em;
+}
+
+.kia__params {
+  margin-bottom: 1.75em;
+}
+
+.kia__params .kia__params--header {
+  margin-bottom: 0.3em;
+}
+
+.kia__responses--left, .kia__responses--right {
+  display: inline-block;
+  width: 49%;
+}
+
+.clearfix {
+  overflow: auto;
+}
+
+.clearfix::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+.mb-1 {
+  margin-bottom: 0.3em;
+}
+
+.mt-2 {
+  margin-top: 3em;
+}
+
+.mt-3 {
+  margin-top: 0.5em;
+}
+
+small {
+  margin-top: 0.2em;
+}
+
+code.highlighted {
+  background-color: #F3F6FA;
+  font-family: monospace;
+  padding: 0.1em 0.2em;
+  color: #a92123;
+  font-size: 1.2em;
+}
