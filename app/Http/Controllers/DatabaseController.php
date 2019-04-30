@@ -89,6 +89,7 @@ class DatabaseController extends Controller
                 return SDBSData::where('metadata_id',$i->only('id'))->orderBy('data_year','asc')->get();
             });
         }   
+
         return $datasets;
     }
 

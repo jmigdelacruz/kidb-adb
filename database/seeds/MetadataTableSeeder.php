@@ -13,8 +13,8 @@ class MetadataTableSeeder extends Seeder
     {
         DB::table('metadata')->truncate();
 		DB::table('metadata')->insert(array(
-			array("indicator_id"=>"1","country_id"=>"1"),
-            array("indicator_id"=>"1","country_id"=>"3"),
+			array("indicator_id"=>"2","country_id"=>"1"),
+            array("indicator_id"=>"2","country_id"=>"3"),
 		));
     }
 }
