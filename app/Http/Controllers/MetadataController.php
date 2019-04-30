@@ -5,6 +5,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Country;
 use App\UnitMultiplier;
+use App\Indicator;
 
 class MetadataController extends Controller
 {
@@ -533,6 +534,35 @@ class MetadataController extends Controller
                 }
                 /*end country codes*/
             $xml->endElement();
+
+            #SERIES
+            $xml->startElement('Codelist');
+            $xml->writeAttribute('id', 'CL_SERIES_ADB');
+            $xml->writeAttribute('urn', 'urn:sdmx:org.sdmx.infomodel.codelist.Codelist=KI:CL_SERIES_ADB(1.0)');
+            $xml->writeAttribute('agencyID', 'ADB');
+            $xml->writeAttribute('version', '1.0');
+            $xml->writeAttribute('isFinal', 'false');
+                $xml->startElement('Name');
+                $xml->writeAttribute('xml:lang', 'en');
+                $xml->writeAttribute('xmlns', 'http://www.sdmx.org/resources/sdmxml/schemas/v2_1/common');
+                $xml->writeAttribute('text', 'Series code list');
+                $xml->endElement();
+                /*start unit multiplier codes*/
+                $indicators = Indicator::all();
+                foreach ($indicators as $indicator) {
+                    $xml->startElement('Code');
+                    $xml->writeAttribute('id', $indicator->sdmx_code);
+                    $xml->writeAttribute('urn', 'urn:sdmx:org.sdmx.infomodel.codelist.Code=KI:CL_UNIT_MULT_ADB(1.0).'.$indicator->sdmx_code);
+                        $xml->startElement('Name');
+                        $xml->writeAttribute('xml:lang', 'en');
+                        $xml->writeAttribute('xmlns', 'http://www.sdmx.org/resources/sdmxml/schemas/v2_1/common');
+                        $xml->writeAttribute('text', $indicator->name);
+                        $xml->endElement();
+                    $xml->endElement();
+                }
+                /*end unit multiplier codes*/
+            $xml->endElement();
+
 
             #UNIT MULT
             $xml->startElement('Codelist');
