@@ -8,10 +8,13 @@ use App\Metadata;
 use App\SDBSData;
 use App\Country;
 use Spatie\ArrayToXml\ArrayToXml;
+use DB;
+use Illuminate\Pagination;
 
 class DatabaseController extends Controller
 {
     private $xml;
+    private $per_page = 500;
 
     public function __construct()
     {
@@ -52,6 +55,15 @@ class DatabaseController extends Controller
         $xml->endElement();
     }
 
+    #set number of records per result page
+    public function setPagination($per_page) {
+        if ($per_page) {
+            $this->per_page = $per_page;
+        }
+        return $this->per_page;
+    }    
+
+    #filter data by input year - matches sdmx code with existing code
     public function filterDataByCountry($metadata, $countries) {
         $country_filter = [];
         if ($countries) {
@@ -66,10 +78,12 @@ class DatabaseController extends Controller
         return $countries;
     }
 
-    public function filterDataByYear($metadata, $years) {
+    #filter data by input year
+    public function filterData($metadata, $years) {
         $year_filter = [];
         if ($years) {
             $year_filter = explode(",",$years);
+            #allow single year and range input
             foreach ($year_filter as $key => $year_input) {
                 if (strpos($year_input, ':') !== false) {
                     $parts = explode(':', $year_input);
@@ -82,14 +96,14 @@ class DatabaseController extends Controller
                 }
             }
             $datasets = $metadata->map(function($i) use ($year_filter) {
-                return SDBSData::where('metadata_id',$i->only('id'))->whereIn('data_year',$year_filter)->orderBy('data_year','asc')->get();
+                return SDBSData::where('metadata_id',$i->only('id'))->whereIn('data_year',$year_filter)->orderBy('data_year','asc')->paginate($this->per_page);
             });
         } else {
             $datasets = $metadata->map(function($i) {
-                return SDBSData::where('metadata_id',$i->only('id'))->orderBy('data_year','asc')->get();
+                return SDBSData::where('metadata_id',$i->only('id'))->orderBy('data_year','asc')->paginate($this->per_page);
             });
         }   
-
+        // dd($datasets->currentPage(2));// $datasets = $datasets->currentPage(2);
         return $datasets;
     }
 
@@ -111,14 +125,16 @@ class DatabaseController extends Controller
         return $multiplier;
     }
 
+
     # returns SDMX sample data
     public function querydata(Request $request, $sdmx_code) {
 
         $indicator = Indicator::where('sdmx_code',$sdmx_code)->first();
         if ($indicator) {
             $metadata     = Metadata::where('indicator_id',$indicator->id)->get();
+            $pagination   = $this->setPagination($request->input('per_page'));
             $countries    = $this->filterDataByCountry($metadata, $request->input('country'));
-            $datasets     = $this->filterDataByYear($metadata, $request->input('year'));
+            $datasets     = $this->filterData($metadata, $request->input('year'));
             $frequency    = $this->filterFrequency($request->input('freq'));
             $multiplier   = $this->formatMultiplier($request->input('um'));
         } else {
@@ -246,6 +262,20 @@ class DatabaseController extends Controller
         } else {
             return response($content)->withHeaders(['Content-Type' => 'text/xml']);
             // return response($content)->withHeaders(['Content-Type' => 'text/xml','Content-Disposition' => 'attachment; filename="sampledata.xml"']);
+        }
+    }
+
+
+
+    #returns the multiplier value
+    public function queryGeneration() {
+        $data_with_sdmx = DB::table('subj_sdmx_concordance')->get();
+        foreach ($data_with_sdmx as $row) {
+            $updates = DB::table('SDBS_SUBJECT')->where('subj_id',$row->subj_id)->get();
+            foreach ($updates as $update) {
+                DB::table('SDBS_SUBJECT')->where('subj_id',$update->subj_id)->update(['subj_sdmx' => $row->subj_sdmx]);
+                echo "UPDATE SDBS_SUBJECT SET subj_sdmx = '".$row->subj_sdmx."' where subj_id = '".$update->subj_id."'<br>";
+            }
         }
     }
 

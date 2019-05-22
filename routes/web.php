@@ -15,9 +15,10 @@
 //     return $router->app->version();
 // });
 $router->get('/', 'DatabaseController@apiHome');
+$router->get('/querygen', 'DatabaseController@queryGeneration');
 
 $router->group(['prefix' => 'api'], function () use ($router) {
-    $router->get('/v1/sdmx/dataflow', 'MetadataController@dataflow');
+    $router->get('/v1/sdmx/dataflow', ['middleware' => ['throttle:2,1'], 'uses' => 'MetadataController@dataflow']);
     $router->get('/v1/sdmx/datastructure', 'MetadataController@datastructure');
     $router->get('/v1/sdmx/conceptscheme', 'MetadataController@conceptscheme');
     $router->get('/v1/sdmx/codelist', 'MetadataController@getCodeList');
