@@ -15,12 +15,13 @@
 //     return $router->app->version();
 // });
 $router->get('/', 'DatabaseController@apiHome');
-$router->get('/querygen', 'DatabaseController@queryGeneration');
+$router->get('/test', 'DatabaseController@test');
 
-$router->group(['prefix' => 'api'], function () use ($router) {
-    $router->get('/v1/sdmx/dataflow', ['middleware' => ['throttle:2,1'], 'uses' => 'MetadataController@dataflow']);
-    $router->get('/v1/sdmx/datastructure', 'MetadataController@datastructure');
-    $router->get('/v1/sdmx/conceptscheme', 'MetadataController@conceptscheme');
-    $router->get('/v1/sdmx/codelist', 'MetadataController@getCodeList');
-    $router->get('/v1/sdmx/{sdmx_code}', 'DatabaseController@querydata');
+$router->group(['prefix' => 'v1'], function () use ($router) {
+    $router->get('/sdmx/dataflow', 'MetadataController@dataflow');
+    $router->get('/sdmx/datastructure', 'MetadataController@datastructure');
+    $router->get('/sdmx/conceptscheme', 'MetadataController@conceptscheme');
+    $router->get('/sdmx/codelist', 'MetadataController@getCodeList');
+    $router->get('/sdmx/rawquery', 'DatabaseController@rawQuery');
+    $router->get('/sdmx/{sdmx_code}', ['middleware' => ['throttle:30,1'], 'uses' => 'DatabaseController@querydata']);
 });
