@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('custom-styles')
-<link href="{{ url('css/api.css') }}" rel="stylesheet">
+<link href="{{ url('css/api.css?v=3') }}" rel="stylesheet">
 <link href="{{ url('css/bsform.css') }}" rel="stylesheet">
 @endsection
 
@@ -25,7 +25,7 @@
 				  <div class="input-group-prepend">
 				    <span class="input-group-text get">GET &nbsp;{{url()}}</span>
 				  </div>
-				  <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)" value="api/v1/sdmx/dataflow">
+				  <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)" value="v1/sdmx/dataflow">
 				  <div class="input-group-append">
 				    <span class="input-group-text kia__copy">Copy &nbsp;<i class="fas fa-clipboard"></i></span>
 				  </div>
@@ -96,7 +96,7 @@
 				  <div class="input-group-prepend">
 				    <span class="input-group-text get">GET &nbsp;{{url()}}</span>
 				  </div>
-				  <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)" value="api/v1/sdmx/datastructure">
+				  <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)" value="v1/sdmx/datastructure">
 				  <div class="input-group-append">
 				    <span class="input-group-text kia__copy">Copy &nbsp;<i class="fas fa-clipboard"></i></span>
 				  </div>
@@ -104,7 +104,7 @@
 			</div>
 			<div class="kia__collapsed">
 			  <div class="kia__collapsed--head">Implementation Notes</div>
-			  <div class="kia__collapsed--subhead">Retrieves the dimensions for the KI dataset</div>
+			  <div class="kia__collapsed--subhead">Retrieves the DSD for the KI dataset</div>
 			  <br>
 			  <div class="kia__collapsed--head">Response Format</div>
 			  <div class="kia__collapsed--subhead">SDMX-ML (XML), SDMX-JSON</div>
@@ -159,7 +159,7 @@
 				  <div class="input-group-prepend">
 				    <span class="input-group-text get">GET &nbsp;{{url()}}</span>
 				  </div>
-				  <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)" value="api/v1/sdmx/conceptscheme">
+				  <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)" value="v1/sdmx/conceptscheme">
 				  <div class="input-group-append">
 				    <span class="input-group-text kia__copy">Copy &nbsp;<i class="fas fa-clipboard"></i></span>
 				  </div>
@@ -167,7 +167,7 @@
 			</div>
 			<div class="kia__collapsed">
 			  <div class="kia__collapsed--head">Implementation Notes</div>
-			  <div class="kia__collapsed--subhead">retrieves the dimensions for the KI dataset</div>
+			  <div class="kia__collapsed--subhead">Retrieves the concept schemes for the KI dataset</div>
 			  <br>
 			  <div class="kia__collapsed--head">Response Format</div>
 			  <div class="kia__collapsed--subhead">SDMX-ML (XML), SDMX-JSON</div>
@@ -221,7 +221,7 @@
 				  <div class="input-group-prepend">
 				    <span class="input-group-text get">GET &nbsp;{{url()}}</span>
 				  </div>
-				  <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)" value="api/v1/sdmx/codelist">
+				  <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)" value="v1/sdmx/codelist">
 				  <div class="input-group-append">
 				    <span class="input-group-text kia__copy">Copy &nbsp;<i class="fas fa-clipboard"></i></span>
 				  </div>
@@ -229,7 +229,7 @@
 			</div>
 			<div class="kia__collapsed">
 			  <div class="kia__collapsed--head">Implementation Notes</div>
-			  <div class="kia__collapsed--subhead">retrieves the code list for the KI dataset</div>
+			  <div class="kia__collapsed--subhead">Retrieves the code list for the KI dataset</div>
 			  <br>
 			  <div class="kia__collapsed--head">Response Format</div>
 			  <div class="kia__collapsed--subhead">SDMX-ML (XML), SDMX-JSON</div>
@@ -271,7 +271,7 @@
 				  <div class="input-group-prepend">
 				    <span class="input-group-text get">GET &nbsp;{{url()}}</span>
 				  </div>
-				  <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)" value="api/v1/sdmx/{indicator}">
+				  <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)" value="v1/sdmx/{indicator}">
 				  <div class="input-group-append">
 				    <span class="input-group-text kia__copy">Copy &nbsp;<i class="fas fa-clipboard"></i></span>
 				  </div>
@@ -282,7 +282,11 @@
 			  <div class="kia__collapsed--subhead">This end-point requires {indicator} SDMX code to return the corresponding KI indicator dataset. Refer to the code list for SDMX indicator codes.</div><br>
 			  <div class="kia__collapsed--head">Parameters</div>
 			  <div class="kia__collapsed--subhead">
-			  	<div class="kia__params mt-3">
+				<div class="kia__params mt-3">
+				  	<div class="kia__params--header"><b>sdmx_format</b> = For viewing data in either <span class="kia__accent kia__accent--bg">generic</span> or <span class="kia__accent kia__accent--bg">compact</span> (structure specific) schema. Generic is the default value.</div>
+				  	<small>e.g. /api/v1/sdmx/POP_MID<span class="kia__accent">?sdmx_format=compact</span></small>
+				</div>
+			  	<div class="kia__params">
 			  		<div class="kia__params--header"><b>country</b> = ISO Country code. Filters results by selected country. Multiple countries can be selected using the <span class="kia__accent kia__accent--bg">,</span> separator. Refer to code list for frequency names and codes.</div>
 			  		<small>e.g. /api/v1/sdmx/POP_MID<span class="kia__accent">?country=PHI</span></small><br>
 			  		<small>e.g. /api/v1/sdmx/POP_MID<span class="kia__accent">?country=PHI,BHU,SRI</span></small>
@@ -297,14 +301,10 @@
 				  	<div class="kia__params--header"><b>freq</b> = Frequency code. Refer to code list for frequency names and codes.</div>
 				  	<small>e.g. /api/v1/sdmx/POP_MID<span class="kia__accent">?frequency=A</span></small>
 				</div>
-				<div class="kia__params">
+				<!-- <div class="kia__params">
 				  	<div class="kia__params--header"><b>um</b> = Unit multiplier. Indicates the magnitude in the units of measurement. Refer to code list for UOM names and codes.</div>
 				  	<small>e.g. /api/v1/sdmx/POP_MID<span class="kia__accent">?um=6</span></small>
-				</div>
-				<div class="kia__params">
-				  	<div class="kia__params--header"><b>source</b> = Refer to code list for source codes.</div>
-				  	<small>e.g. /api/v1/sdmx/POP_MID<span class="kia__accent">?source=PSA</span></small>
-				</div>
+				</div> -->
 				<div class="kia__params">
 				  	<div class="kia__params--header"><b>page</b> = Page number. For paging through large result-sets. This allows users to indicate the page number requested from the record-set.</div>
 				  	<small>e.g. /api/v1/sdmx/POP_MID<span class="kia__accent">?page=5</span></small>
@@ -343,12 +343,16 @@
 	});
 	function toggleCollapsed(element) {
 		el = element;
+		console.log(el);
 		el.closest('.kia__call').find('.kia__collapsed').slideToggle( "fast", function() {
-			el.closest('.kia__call').find('.fas').toggleClass('fa-caret-up fa-caret-down');
-			// update values
-			// var string2 = '{\n   "code name": "abbreviated code"\n}';
-			// var string3 = '{\n   "PHI": "Philippines"\n}';
-			// $(this).closest('.kia__collapsed').find('.kia__collapsed--code').val(string3);
+			el = el.closest('.kia__call').find('.kia__link');
+			if (el.hasClass('less')) {
+				el.html('View More <i class="fas fa-caret-down"></i>');
+				el.removeClass('less');
+			} else {
+				el.addClass(" less");
+				el.html('View Less <i class="fas fa-caret-up"></i>');
+			}
 		});
 	}
 	function copyToClipboard(text) {
