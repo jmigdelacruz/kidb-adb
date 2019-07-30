@@ -1,6 +1,7 @@
 <?php
 use Illuminate\Support\Facades\Crypt;
 $notapass = Crypt::encryptString('osdbs');
+$notapass2 = Crypt::encryptString('secret');
 return [
 	'default' => 'oracle',
 	'connections' => [
@@ -21,7 +22,7 @@ return [
 		    'port' => '3306',
 		    'database' => 'kidb',
 		    'username' => 'homestead',
-		    'password' => 'secret'
+		    'password' => Crypt::decryptString($notapass2),
 		]
 	]
 ];
