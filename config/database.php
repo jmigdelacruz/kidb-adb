@@ -1,6 +1,8 @@
 <?php
+use Illuminate\Support\Facades\Crypt;
+$notapass = Crypt::encryptString('osdbs');
 return [
-	'default' => 'mysql',
+	'default' => 'oracle',
 	'connections' => [
 		'oracle' => [
 		    'driver' => 'oracle',
@@ -9,7 +11,7 @@ return [
 		    'database' => 'LDDB02',
 		    'service_name' => 'OISTDEV',
 		    'username' => 'OSDBS',
-		    'password' => 'osdbs',
+		    'password' => Crypt::decryptString($notapass),
 		    'charset' => '',
 		    'prefix' => '',
 		],
