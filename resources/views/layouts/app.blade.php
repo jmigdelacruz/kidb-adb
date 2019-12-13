@@ -11,8 +11,14 @@
     </div>
     <nav class="kia__nav">
         <ul class="kia__ul">
-            <li><a class="kia__brand--title">Key Indicators Database SDMX API</a></li>
-            <li><a class="kia__brand--subtitle">The Key Indicators (KI) database presents the latest statistics on a comprehensive set of economic, financial, social, environmental, and SDG indicators for the 49 regional members of the Asian Development Bank (ADB). KI data can be programatically retrieved by specifying values for the API endpoints described below.</a></li>
+            <li><a class="kia__brand--title">SDMX API</a></li>
+            <li><a class="kia__brand--subtitle">The Key Indicators database presents the latest statistics on a comprehensive set of economic, financial, social, environmental, and SDG indicators for the 49 regional members of the Asian Development Bank (ADB). KI data can be programatically retrieved by specifying values for the API endpoints described below.</a></li>
+
+
+            The Statistical Data and Metadata eXchange Application Programming Interface is a web service which allows users to programmatically access database records that are available in the Key Indicators Database. This API allows users to fetch non-SDMX data and receive it in SDMX-format from any computer language, operating system, or platform that can generate web requests.
+
+            Data was last updated on XXX.
+
         </ul>
     </nav>
 

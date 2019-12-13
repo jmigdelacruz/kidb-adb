@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Country;
 use App\UnitMultiplier;
 use App\Indicator;
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
 
 class MetadataController extends Controller
 {
@@ -121,7 +123,10 @@ class MetadataController extends Controller
 
     # returns the KIDB SDMX data
     public function datastructure() {
-        
+        $log = ['orderId' => 10,'description' => 'Some description'];
+        $orderLog = new Logger('api');
+        $orderLog->pushHandler(new StreamHandler(storage_path('logs/api.log')), Logger::INFO);
+        $orderLog->info('datastructure');
         $xml = $this->xml;
         $xml->openMemory();
         $xml->startDocument();
@@ -606,4 +611,10 @@ class MetadataController extends Controller
         }
     }
 
+    public function apiLog($string) {
+        $log = ['orderId' => 10,'description' => 'Some description'];
+        $orderLog = new Logger('api');
+        $orderLog->pushHandler(new StreamHandler(storage_path('logs/api.log')), Logger::INFO);
+        $orderLog->info('api.request');
+    }
 }
