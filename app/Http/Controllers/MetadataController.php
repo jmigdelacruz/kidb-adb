@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use Yajra\Oci8\Eloquent\OracleEloquent as Eloquent;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Country;
@@ -137,8 +138,8 @@ class MetadataController extends Controller
                     $xml->startElement('DataStructures');
                     $xml->writeAttribute('xmlns', "http://www.sdmx.org/resources/sdmxml/schemas/v2_1/structure");
                         $xml->startElement('DataStructure');
-                        $xml->writeAttribute('id', "KI");
-                        $xml->writeAttribute('urn', "urn:sdmx:org.sdmx.infomodel.conceptscheme.ConcepScheme=ADB:KI(1.0)");
+                        $xml->writeAttribute('id', "KI_DSD_1_0");
+                        $xml->writeAttribute('urn', "urn:sdmx:org.sdmx.infomodel.conceptscheme.ConcepScheme=ADB:KI_DSD_1_0(1.0)");
                         $xml->writeAttribute('agencyID', "ADB");
                         $xml->writeAttribute('version', "1.0");
                         $xml->writeAttribute('isFinal', "false");
@@ -150,11 +151,11 @@ class MetadataController extends Controller
 
                                 $xml->startElement('DimensionList');
                                 $xml->writeAttribute('id', "DimensionDescriptor");
-                                $xml->writeAttribute('urn', "urn:sdmx:org.sdmx.infomodel.datastructure.DimensionDescriptor=ADB:KI(1.0).DimensionDescriptor");
+                                $xml->writeAttribute('urn', "urn:sdmx:org.sdmx.infomodel.datastructure.DimensionDescriptor=ADB:KI_DSD_1_0(1.0).DimensionDescriptor");
                                     #freq dimension
                                     $xml->startElement('Dimension');
                                     $xml->writeAttribute('id', "FREQ");
-                                    $xml->writeAttribute('urn', "urn:sdmx:org.sdmx.infomodel.datastructure.Dimension=ADB:KI(1.0).FREQ");
+                                    $xml->writeAttribute('urn', "urn:sdmx:org.sdmx.infomodel.datastructure.Dimension=ADB:KI_DSD_1_0(1.0).FREQ");
                                     $xml->writeAttribute('position', "1");
                                         $xml->startElement('ConceptIdentity');
                                             $xml->startElement('Ref');
@@ -184,7 +185,7 @@ class MetadataController extends Controller
                                     #series dimension
                                     $xml->startElement('Dimension');
                                     $xml->writeAttribute('id', "SERIES");
-                                    $xml->writeAttribute('urn', "urn:sdmx:org.sdmx.infomodel.datastructure.Dimension=ADB:KI(1.0).SERIES");
+                                    $xml->writeAttribute('urn', "urn:sdmx:org.sdmx.infomodel.datastructure.Dimension=ADB:KI_DSD_1_0(1.0).SERIES");
                                     $xml->writeAttribute('position', "2");
                                         $xml->startElement('ConceptIdentity');
                                             $xml->startElement('Ref');
@@ -213,7 +214,7 @@ class MetadataController extends Controller
                                     #ref area dimension
                                     $xml->startElement('Dimension');
                                     $xml->writeAttribute('id', "REF_AREA");
-                                    $xml->writeAttribute('urn', "urn:sdmx:org.sdmx.infomodel.datastructure.Dimension=ADB:KI(1.0).REF_AREA");
+                                    $xml->writeAttribute('urn', "urn:sdmx:org.sdmx.infomodel.datastructure.Dimension=ADB:KI_DSD_1_0(1.0).REF_AREA");
                                     $xml->writeAttribute('position', "3");
                                         $xml->startElement('ConceptIdentity');
                                             $xml->startElement('Ref');
@@ -242,7 +243,7 @@ class MetadataController extends Controller
                                     #ref period dimension
                                     $xml->startElement('TimeDimension');
                                     $xml->writeAttribute('id', "TIME_PERIOD");
-                                    $xml->writeAttribute('urn', "urn:sdmx:org.sdmx.infomodel.datastructure.Dimension=ADB:KI(1.0).TIME_PERIOD");
+                                    $xml->writeAttribute('urn', "urn:sdmx:org.sdmx.infomodel.datastructure.Dimension=ADB:KI_DSD_1_0(1.0).TIME_PERIOD");
                                     $xml->writeAttribute('position', "4");
                                         $xml->startElement('ConceptIdentity');
                                             $xml->startElement('Ref');
@@ -265,10 +266,10 @@ class MetadataController extends Controller
 
                             $xml->startElement('AttributeList');
                             $xml->writeAttribute('id', "AttributeDescriptor");
-                            $xml->writeAttribute('urn', "urn:sdmx:org.sdmx.infomodel.datastructure.AttributeDescriptor=ADB:KI(1.0).AttributeDescriptor");
+                            $xml->writeAttribute('urn', "urn:sdmx:org.sdmx.infomodel.datastructure.AttributeDescriptor=ADB:KI_DSD_1_0(1.0).AttributeDescriptor");
                                     $xml->startElement('Attribute');
                                     $xml->writeAttribute('id', "UNIT_MULT");
-                                    $xml->writeAttribute('urn', "urn:sdmx:org.sdmx.infomodel.datastructure.DataAttribute=ADB:KI(1.0).UNIT_MULT");
+                                    $xml->writeAttribute('urn', "urn:sdmx:org.sdmx.infomodel.datastructure.DataAttribute=ADB:KI_DSD_1_0(1.0).UNIT_MULT");
                                     $xml->writeAttribute('assignmentStatus', "Mandatory");
                                         $xml->startElement('ConceptIdentity');
                                             $xml->startElement('Ref');
@@ -305,10 +306,10 @@ class MetadataController extends Controller
 
                             $xml->startElement('MeasureList');
                             $xml->writeAttribute('id', "MeasureDescriptor");
-                            $xml->writeAttribute('urn', "urn:sdmx:org.sdmx.infomodel.datastructure.MeasureDescriptor=ADB:KI(1.0).MeasureDescriptor");
+                            $xml->writeAttribute('urn', "urn:sdmx:org.sdmx.infomodel.datastructure.MeasureDescriptor=ADB:KI_DSD_1_0(1.0).MeasureDescriptor");
                                     $xml->startElement('PrimaryMeasure');
                                     $xml->writeAttribute('id', "OBS_VALUE");
-                                    $xml->writeAttribute('urn', "urn:sdmx:org.sdmx.infomodel.datastructure.PrimaryMeasure=ADB:KI(1.0).OBS_VALUE");
+                                    $xml->writeAttribute('urn', "urn:sdmx:org.sdmx.infomodel.datastructure.PrimaryMeasure=ADB:KI_DSD_1_0(1.0).OBS_VALUE");
                                         $xml->startElement('ConceptIdentity');
                                             $xml->startElement('Ref');
                                                 $xml->writeAttribute('id', "OBS_VALUE");
@@ -528,12 +529,12 @@ class MetadataController extends Controller
                 $countries = Country::all();
                 foreach ($countries as $country) {
                     $xml->startElement('Code');
-                    $xml->writeAttribute('id', $country->country_code);
-                    $xml->writeAttribute('urn', 'urn:sdmx:org.sdmx.infomodel.codelist.Code=KI:CL_REF_AREA_ADB(1.0).'.$country->country_sdmx);
+                    $xml->writeAttribute('id', $country->ctry_cd);
+                    $xml->writeAttribute('urn', 'urn:sdmx:org.sdmx.infomodel.codelist.Code=KI:CL_REF_AREA_ADB(1.0).'.$country->ctry_cd);
                         $xml->startElement('Name');
                         $xml->writeAttribute('xml:lang', 'en');
                         $xml->writeAttribute('xmlns', 'http://www.sdmx.org/resources/sdmxml/schemas/v2_1/common');
-                        $xml->writeAttribute('text', $country->country_name);
+                        $xml->writeAttribute('text', $country->ctry_nm);
                         $xml->endElement();
                     $xml->endElement();
                 }
@@ -552,20 +553,20 @@ class MetadataController extends Controller
                 $xml->writeAttribute('xmlns', 'http://www.sdmx.org/resources/sdmxml/schemas/v2_1/common');
                 $xml->writeAttribute('text', 'Series code list');
                 $xml->endElement();
-                /*start unit multiplier codes*/
+                /*start indicator codes*/
                 $indicators = Indicator::all();
                 foreach ($indicators as $indicator) {
                     $xml->startElement('Code');
-                    $xml->writeAttribute('id', $indicator->sdmx_code);
-                    $xml->writeAttribute('urn', 'urn:sdmx:org.sdmx.infomodel.codelist.Code=KI:CL_UNIT_MULT_ADB(1.0).'.$indicator->sdmx_code);
+                    $xml->writeAttribute('id', $indicator->subj_id);
+                    $xml->writeAttribute('urn', 'urn:sdmx:org.sdmx.infomodel.codelist.Code=KI:CL_UNIT_MULT_ADB(1.0).'.$indicator->subj_id);
                         $xml->startElement('Name');
                         $xml->writeAttribute('xml:lang', 'en');
                         $xml->writeAttribute('xmlns', 'http://www.sdmx.org/resources/sdmxml/schemas/v2_1/common');
-                        $xml->writeAttribute('text', $indicator->name);
+                        $xml->writeAttribute('text', $indicator->subj_nm);
                         $xml->endElement();
                     $xml->endElement();
                 }
-                /*end unit multiplier codes*/
+                /*end indicator codes*/
             $xml->endElement();
 
 
@@ -585,12 +586,12 @@ class MetadataController extends Controller
                 $unitmult = UnitMultiplier::all();
                 foreach ($unitmult as $multiplier) {
                     $xml->startElement('Code');
-                    $xml->writeAttribute('id', $multiplier->um_code);
-                    $xml->writeAttribute('urn', 'urn:sdmx:org.sdmx.infomodel.codelist.Code=KI:CL_UNIT_MULT_ADB(1.0).'.$multiplier->um_code);
+                    $xml->writeAttribute('id', $multiplier->unit_meas_id);
+                    $xml->writeAttribute('urn', 'urn:sdmx:org.sdmx.infomodel.codelist.Code=KI:CL_UNIT_MULT_ADB(1.0).'.$multiplier->unit_meas_id);
                         $xml->startElement('Name');
                         $xml->writeAttribute('xml:lang', 'en');
                         $xml->writeAttribute('xmlns', 'http://www.sdmx.org/resources/sdmxml/schemas/v2_1/common');
-                        $xml->writeAttribute('text', $multiplier->um_name);
+                        $xml->writeAttribute('text', $multiplier->unit_meas_nm);
                         $xml->endElement();
                     $xml->endElement();
                 }
@@ -607,7 +608,7 @@ class MetadataController extends Controller
         } else if ($format == "xml") {
             return response($content)->withHeaders(['Content-Type' => 'text/xml']);
         } else {
-            return response($content)->withHeaders(['Content-Type' => 'text/xml','Content-Disposition' => 'attachment; filename="sampledata.xml"']);
+            return response($content)->withHeaders(['Content-Type' => 'text/xml','Content-Disposition' => 'attachment; filename="codelist_adb.xml"']);
         }
     }
 
