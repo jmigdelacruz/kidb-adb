@@ -7,8 +7,6 @@ use Illuminate\Http\Request;
 use App\Country;
 use App\UnitMultiplier;
 use App\Indicator;
-use Monolog\Logger;
-use Monolog\Handler\StreamHandler;
 
 class MetadataController extends Controller
 {
@@ -124,10 +122,7 @@ class MetadataController extends Controller
 
     # returns the KIDB SDMX data
     public function datastructure() {
-        $log = ['orderId' => 10,'description' => 'Some description'];
-        $orderLog = new Logger('api');
-        $orderLog->pushHandler(new StreamHandler(storage_path('logs/api.log')), Logger::INFO);
-        $orderLog->info('datastructure');
+        
         $xml = $this->xml;
         $xml->openMemory();
         $xml->startDocument();
@@ -557,8 +552,8 @@ class MetadataController extends Controller
                 $indicators = Indicator::all();
                 foreach ($indicators as $indicator) {
                     $xml->startElement('Code');
-                    $xml->writeAttribute('id', $indicator->subj_id);
-                    $xml->writeAttribute('urn', 'urn:sdmx:org.sdmx.infomodel.codelist.Code=KI:CL_UNIT_MULT_ADB(1.0).'.$indicator->subj_id);
+                    $xml->writeAttribute('id', $indicator->subj_sdmx);
+                    $xml->writeAttribute('urn', 'urn:sdmx:org.sdmx.infomodel.codelist.Code=KI:CL_UNIT_MULT_ADB(1.0).'.$indicator->subj_sdmx);
                         $xml->startElement('Name');
                         $xml->writeAttribute('xml:lang', 'en');
                         $xml->writeAttribute('xmlns', 'http://www.sdmx.org/resources/sdmxml/schemas/v2_1/common');
@@ -603,19 +598,20 @@ class MetadataController extends Controller
         $xml = null;
 
         $format = $request->input('format');
+        $viewmode = $request->input('mode');
         if ($format == "json") {
-            return response()->json($this->returnJson($content));
-        } else if ($format == "xml") {
-            return response($content)->withHeaders(['Content-Type' => 'text/xml']);
+            if ($viewmode == "view") {
+                return response()->json($this->returnJson($content));
+            } else {
+                return response()->json($this->returnJson($content))->withHeaders(['Content-Type' => 'text/xml','Content-Disposition' => 'attachment; filename="codelist_adb.xml"']);
+            }
         } else {
-            return response($content)->withHeaders(['Content-Type' => 'text/xml','Content-Disposition' => 'attachment; filename="codelist_adb.xml"']);
+            if ($viewmode == "view") {
+                return response($content)->withHeaders(['Content-Type' => 'text/xml']);
+            } else {
+                return response($content)->withHeaders(['Content-Type' => 'text/xml','Content-Disposition' => 'attachment; filename="codelist_adb.xml"']);    
+            }
         }
     }
 
-    public function apiLog($string) {
-        $log = ['orderId' => 10,'description' => 'Some description'];
-        $orderLog = new Logger('api');
-        $orderLog->pushHandler(new StreamHandler(storage_path('logs/api.log')), Logger::INFO);
-        $orderLog->info('api.request');
-    }
 }
