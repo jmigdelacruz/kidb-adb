@@ -34,6 +34,10 @@ class DatabaseController extends Controller
         $orderLog = new Logger('api');
         $orderLog->pushHandler(new StreamHandler(storage_path('logs/api.log')), Logger::INFO);
         $orderLog->info('api/,'.$this->getUserIpAddr());
+        // $lastupdate = DB::table('sdbs_misc_data')
+        //         ->select('misc_data_val')
+        //         ->where('misc_data_id', 'HOME_LAST_UPD_DT')
+        //         ->first();
         return view('api-home');
     }
 
@@ -123,7 +127,6 @@ class DatabaseController extends Controller
                        ->leftjoin('SDBS_Subject','SDBS_Metadata.subj_id', '=', 'SDBS_Subject.subj_id')
                        ->leftjoin('SDBS_Country','SDBS_Metadata.ctry_id', '=', 'SDBS_Country.ctry_id')
                        ->where('SDBS_Subject.subj_sdmx','MIN_QUR_CNP')
-                       // ->where('ctry_sdmx','AF')
                        ->orderBy('ctry_sdmx','asc')
                        ->select(['SDBS_Subject.subj_id','subj_alt','subj_sdmx','SDBS_Country.ctry_sdmx','SDBS_Metadata.metadata_id'])
                        ->paginate(10);
@@ -176,31 +179,36 @@ class DatabaseController extends Controller
 
     #filter data by input year
     public function filterData($countries, $years, $indicator) {
+        $ki_countries = ["AF","AM","AU","AZ","BD","BT","BN","KH","CN","CK","FJ","GE","HK","IN","ID","JP","KZ","KI","KP","KG","LA","MY","MV","MH","FM","MN","MM","NR","NP","NZ","PK","PW","PG","PH","WS","SG","SB","LK","TW","TJ","TH","TL","TO","TM","TV","UZ","VU","VN"];
         $dataset = DB::table('SDBS_Data')
                        ->leftjoin('SDBS_Metadata','SDBS_Metadata.metadata_id', '=', 'SDBS_Data.metadata_id')
                        ->leftjoin('SDBS_Country','SDBS_Metadata.ctry_id', '=', 'SDBS_Country.ctry_id')
                        ->where('SDBS_Metadata.subj_id',$indicator->subj_id)
                        ->where('data_year','>=','2000')
                        ->where('data_flg_value','KI')
+                       ->whereIn('SDBS_Country.ctry_sdmx',$ki_countries)
                        ->orderBy('ctry_sdmx','asc')
                        ->orderBy('data_year','asc')
                        ->select(['data_value1','data_year','SDBS_Country.ctry_sdmx']);
         $dataset = $this->applyCountryScope($dataset,$countries);
         $dataset = $this->applyYearScope($dataset,$years);
         $dataset = $dataset->paginate($this->per_page);
-        // if (count($dataset)==0) {
-        //     $dataset = DB::table('SDBS_Data')
-        //                ->leftjoin('SDBS_Metadata','SDBS_Metadata.metadata_id', '=', 'SDBS_Data.metadata_id')
-        //                ->leftjoin('SDBS_Country','SDBS_Metadata.ctry_id', '=', 'SDBS_Country.ctry_id')
-        //                ->where('SDBS_Metadata.subj_id',$indicator->subj_alt)
-        //                ->where('data_year','>=','2000')
-        //                ->orderBy('ctry_sdmx','asc')
-        //                ->orderBy('data_year','asc')
-        //                ->select(['data_value1','data_year','SDBS_Country.ctry_sdmx']);
-        //     $dataset = $this->applyCountryScope($dataset,$countries);
-        //     $dataset = $this->applyYearScope($dataset,$years);
-        //     $dataset = $dataset->paginate($this->per_page);
-        // }
+
+        #select * from sdbs_subject_group_members where subj_grp_id = 'SG-99' and subj_grp_mem_parent_id = 'SU-962' order by subj_grp_mem_lineage ;
+        if (count($dataset)==0) {
+            $alt_indicator = DB::table('sdbs_subject_group_members')->where('subj_grp_id','SG-99')->where('subj_grp_mem_parent_id',$indicator->subj_id)->first();
+            $dataset = DB::table('SDBS_Data')
+                       ->leftjoin('SDBS_Metadata','SDBS_Metadata.metadata_id', '=', 'SDBS_Data.metadata_id')
+                       ->leftjoin('SDBS_Country','SDBS_Metadata.ctry_id', '=', 'SDBS_Country.ctry_id')
+                       ->where('SDBS_Metadata.subj_id',$alt_indicator->subj_id)
+                       ->where('data_year','>=','2000')
+                       ->orderBy('ctry_sdmx','asc')
+                       ->orderBy('data_year','asc')
+                       ->select(['data_value1','data_year','SDBS_Country.ctry_sdmx']);
+            $dataset = $this->applyCountryScope($dataset,$countries);
+            $dataset = $this->applyYearScope($dataset,$years);
+            $dataset = $dataset->paginate($this->per_page);
+        }
         return $dataset;
     }
 
@@ -235,15 +243,15 @@ class DatabaseController extends Controller
 
         
         if ($request->input('sdmx_format')=="compact") {
-            return $this->structuredSDMXFormat($sdmx_code, $indicator, $datasets->items(), $frequency, $multiplier, $request->input('input_format'),$request->input('per_page'),$datasets->total(),$datasets->lastPage(),$datasets->currentPage());
+            return $this->structuredSDMXFormat($sdmx_code, $indicator, $datasets->items(), $frequency, $multiplier, $request->input('input_format'),$request->input('per_page'),$datasets->total(),$datasets->lastPage(),$datasets->currentPage(),$request->input('mode'));
         } else {
-            return $this->genericSDMXFormat($sdmx_code, $indicator, $datasets->items(), $frequency, $multiplier,$request->input('input_format'),$request->input('per_page'),$datasets->total(),$datasets->lastPage(),$datasets->currentPage());    
+            return $this->genericSDMXFormat($sdmx_code, $indicator, $datasets->items(), $frequency, $multiplier,$request->input('input_format'),$request->input('per_page'),$datasets->total(),$datasets->lastPage(),$datasets->currentPage(),$request->input('mode'));    
         }
 
     }
 
     #generic format - longer
-    public function genericSDMXFormat($sdmx_code, $indicator, $datasets, $frequency, $multiplier, $input_format, $per_page, $total_records, $last_page, $curr_page) {
+    public function genericSDMXFormat($sdmx_code, $indicator, $datasets, $frequency, $multiplier, $input_format, $per_page, $total_records, $last_page, $curr_page, $viewmode) {
 
         $xml = $this->xml;
         $xml->openMemory();
@@ -333,18 +341,23 @@ class DatabaseController extends Controller
 
 
         if ($input_format == "json") {
-            $xmlObject = simplexml_load_string($content);
+            $xmlObject = simplexml_load_string(str_replace(":","",$content));
             $json = json_encode($xmlObject);
             $array = json_decode($json,TRUE);
             return response()->json($array)->withHeaders(['X-Elapsed-Time'=>$response_time]);
         } else {
-            return response($content)->withHeaders(['Content-Type'=>'text/xml', 'X-Elapsed-Time'=>$response_time]);
+            // return response($content)->withHeaders(['Content-Type'=>'text/xml', 'X-Elapsed-Time'=>$response_time]);
             // return response($content)->withHeaders(['Content-Type' => 'text/xml','Content-Disposition' => 'attachment; filename="sampledata.xml"']);
+            if ($viewmode == "view") {
+                return response($content)->withHeaders(['Content-Type'=>'text/xml', 'X-Elapsed-Time'=>$response_time]);
+            } else {
+                return response($content)->withHeaders(['Content-Type' => 'text/xml','Content-Disposition' => 'attachment;filename="'.$indicator->subj_sdmx.'.xml"', 'X-Elapsed-Time'=>$response_time]);
+            }
         }
     }
 
     #structure specific - more compact ///test comment
-    public function structuredSDMXFormat($sdmx_code, $indicator, $datasets, $frequency, $multiplier, $input_format, $per_page, $total_records, $last_page, $curr_page) {
+    public function structuredSDMXFormat($sdmx_code, $indicator, $datasets, $frequency, $multiplier, $input_format, $per_page, $total_records, $last_page, $curr_page, $viewmode) {
 
         $xml = $this->xml;
         $xml->openMemory();
@@ -399,13 +412,16 @@ class DatabaseController extends Controller
         $orderLog->info('querydata,compact,'.$sdmx_code.','.$this->getUserIpAddr());
 
         if ($input_format == "json") {
-            $xmlObject = simplexml_load_string($content);
+            $xmlObject = simplexml_load_string(str_replace(":","",$content));
             $json = json_encode($xmlObject);
             $array = json_decode($json,TRUE);
             return response()->json($array)->withHeaders(['X-Elapsed-Time'=>$response_time]);
         } else {
-            return response($content)->withHeaders(['Content-Type'=>'text/xml', 'X-Elapsed-Time'=>$response_time]);
-            // return response($content)->withHeaders(['Content-Type' => 'text/xml','Content-Disposition' => 'attachment; filename="sampledata.xml"']);
+            if ($viewmode == "view") {
+                return response($content)->withHeaders(['Content-Type'=>'text/xml', 'X-Elapsed-Time'=>$response_time]);
+            } else {
+                return response($content)->withHeaders(['Content-Type' => 'text/xml','Content-Disposition' => 'attachment; filename="'.$indicator->subj_sdmx.'.xml"', 'X-Elapsed-Time'=>$response_time]);
+            }
         }
     }
 
