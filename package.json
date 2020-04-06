@@ -20,6 +20,6 @@
     "dependencies": {
         "ajv": "^6.5.4",
         "imagemin": "^5.3.1",
-        "minimist": "^1.2.0"
+        "minimist": "^1.2.3"
     }
 }
